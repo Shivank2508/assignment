@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from "react"
 import { useUrlState } from "./hooks/useUrlState";
 import { useDebounce } from "./hooks/useDebounce";
 import { useDataExplorer } from "./hooks/useDataExplorer";
-import { getTotalOrdersCount, getSimulateFailures, setSimulateFailures } from "./services/mockApi";
+import { getTotalOrdersCount } from "./services/mockApi";
 
 import { FilterBar } from "./components/FilterBar";
 import { VirtualTable } from "./components/VirtualTable";
@@ -128,14 +128,6 @@ export default function App() {
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  const [isSimulatingFailures, setIsSimulatingFailures] = useState(() => getSimulateFailures());
-
-  const handleToggleFailures = () => {
-    const nextVal = !isSimulatingFailures;
-    setIsSimulatingFailures(nextVal);
-    setSimulateFailures(nextVal);
-  };
-
   const hasActiveFilters = Boolean(urlState.q || urlState.status || urlState.priority || urlState.category);
 
   return (
@@ -158,17 +150,6 @@ export default function App() {
         </div>
 
         <div className="header-right">
-          {/* Toggle for 1-in-10 Failures Requirement */}
-          <button
-            type="button"
-            className={`btn-toggle-failure ${isSimulatingFailures ? "active" : ""}`}
-            onClick={handleToggleFailures}
-            title="Toggle 1-in-10 random simulated failure requirement"
-          >
-            <span className={`status-dot ${isSimulatingFailures ? "dot-amber" : "dot-zinc"}`}></span>
-            <span>1-in-10 Failures: {isSimulatingFailures ? "ON" : "OFF"}</span>
-          </button>
-
           <button
             type="button"
             className="btn-share"

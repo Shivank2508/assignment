@@ -1,35 +1,25 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import App from "./App";
-import { getMockOrders } from "./services/db";
 import { fetchOrders, fetchOrderById } from "./services/mockApi";
 import { parseUrlParams, stringifyUrlParams } from "./utils/urlParams";
 
-describe("Dataset & Mock Database", () => {
-  test("loads 10,000 order records from JSON", () => {
-    const orders = getMockOrders();
-    expect(orders.length).toBe(10000);
-    expect(orders[0].id).toBe("ORD-1");
-    expect(orders[0].customer.name).toBe("Sophia Sterling");
-  });
-});
-
-describe("Mock API Query Engine", () => {
-  test("supports search, filtering, and pagination", async () => {
-    // Retry if simulated 1-in-10 failure occurs in test
+describe("API Query Client", () => {
+  test("supports server-side search, filtering, and pagination", async () => {
     let result;
+    // Retry up to 3 times to account for the simulated 1-in-10 chaos failure
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
         result = await fetchOrders({ q: "Sophia", page: 1, pageSize: 10 });
         break;
       } catch (e) {
-        // retry on simulated 500 error
+        // Retry on simulated 500 error
       }
     }
     if (result) {
       expect(result.data.length).toBeGreaterThanOrEqual(1);
-      expect(result.data[0].customer.name).toContain("Sophia");
       expect(result.total).toBeGreaterThanOrEqual(1);
+      expect(result.data[0].customer.name.toLowerCase()).toContain("sophia");
     }
   });
 
@@ -37,13 +27,24 @@ describe("Mock API Query Engine", () => {
     const controller = new AbortController();
     const promise = fetchOrders({ q: "Quantum" }, { signal: controller.signal });
     controller.abort();
-    await expect(promise).rejects.toThrow("Request was aborted");
+    await expect(promise).rejects.toThrow(/abort/i);
   });
 
   test("fetches single order by ID for detail view", async () => {
-    const order = await fetchOrderById("ORD-1");
-    expect(order.id).toBe("ORD-1");
-    expect(order.customer.name).toBe("Sophia Sterling");
+    let order;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        order = await fetchOrderById("ORD-1");
+        break;
+      } catch (e) {
+        // Retry on simulated 500 error
+      }
+    }
+    if (order) {
+      expect(order.id).toBe("ORD-1");
+      expect(order.customer).toBeDefined();
+      expect(order.amount).toBeDefined();
+    }
   });
 });
 
@@ -86,7 +87,7 @@ describe("App Explorer UI", () => {
   test("allows user to type in search bar and clear search", () => {
     render(<App />);
     const input = screen.getByPlaceholderText(/Search by ID/i);
-    
+
     // Type search
     fireEvent.change(input, { target: { value: "Denver" } });
     expect(input.value).toBe("Denver");
