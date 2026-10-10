@@ -121,13 +121,6 @@ export default function App() {
     resetFilters();
   }, [resetFilters]);
 
-  const [copiedLink, setCopiedLink] = useState(false);
-  const handleShareLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
-  };
-
   const hasActiveFilters = Boolean(urlState.q || urlState.status || urlState.priority || urlState.category);
 
   return (
