@@ -1,4 +1,4 @@
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api/orders";
+const API_URL = process.env.REACT_APP_API_URL || "https://assignment-lhft.onrender.com/api/orders";
 
 export const getTotalOrdersCount = () => 10000;
 
