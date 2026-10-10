@@ -8,8 +8,8 @@ import { FilterBar } from "./components/FilterBar";
 import { VirtualTable } from "./components/VirtualTable";
 import { Pagination } from "./components/Pagination";
 import { DetailDrawer } from "./components/DetailDrawer";
-import { ErrorStateView, EmptyStateView, TableSkeleton } from "./components/StateViews";
-import { Database, Share2, Check } from "lucide-react";
+import { ErrorStateView, EmptyStateView, TableLoader } from "./components/StateViews";
+import { Database, Share2, Check, Loader2 } from "lucide-react";
 
 import "./App.css";
 
@@ -187,7 +187,10 @@ export default function App() {
         <section className="table-card">
           <div className="table-meta-bar">
             {isLoading ? (
-              <span className="text-cyan">Fetching latest orders from server...</span>
+              <span className="text-cyan meta-loading-indicator">
+                <Loader2 size={14} className="spinner-icon" />
+                <span>Loading latest orders from server...</span>
+              </span>
             ) : (
               <span>
                 Found <strong>{meta.total.toLocaleString()}</strong> orders
@@ -199,8 +202,8 @@ export default function App() {
           {/* Conditional Views: Error, Loading, Empty, or Virtual Table */}
           {isError ? (
             <ErrorStateView error={error} onRetry={retry} />
-          ) : isLoading && data.length === 0 ? (
-            <TableSkeleton />
+          ) : isLoading ? (
+            <TableLoader />
           ) : data.length === 0 ? (
             <EmptyStateView onReset={handleResetFilters} />
           ) : (

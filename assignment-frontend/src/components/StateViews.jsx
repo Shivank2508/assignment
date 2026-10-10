@@ -1,5 +1,5 @@
 import React from "react";
-import { AlertCircle, RefreshCw, SearchX } from "lucide-react";
+import { AlertCircle, RefreshCw, SearchX, Loader2 } from "lucide-react";
 
 /**
  * Honest Error State:
@@ -42,15 +42,34 @@ export function EmptyStateView({ onReset }) {
 }
 
 /**
- * Skeleton Loader:
- * Shimmering rows shown during initial/fresh loading with aria-busy="true".
+ * Modern Loading State:
+ * Shows a glowing spinner, status text, and shimmering skeleton rows until data arrives.
  */
-export function TableSkeleton() {
+export function TableLoader({ message = "Loading orders from server..." }) {
   return (
-    <div className="skeleton-list" aria-busy="true" aria-label="Loading orders dataset">
-      {Array.from({ length: 10 }).map((_, i) => (
-        <div key={i} className="skeleton-row shimmer"></div>
-      ))}
+    <div className="table-loader-container" aria-busy="true" aria-label="Loading orders dataset">
+      <div className="loader-banner">
+        <div className="spinner-wrapper">
+          <Loader2 size={26} className="spinner-icon text-cyan" />
+        </div>
+        <div className="loader-text-group">
+          <span className="loader-heading">{message}</span>
+          <span className="loader-subtext">Fetching real-time orders from Supabase...</span>
+        </div>
+      </div>
+      <div className="skeleton-list">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div
+            key={i}
+            className="skeleton-row shimmer"
+            style={{ opacity: Math.max(0.3, 1 - i * 0.08) }}
+          />
+        ))}
+      </div>
     </div>
   );
+}
+
+export function TableSkeleton() {
+  return <TableLoader />;
 }

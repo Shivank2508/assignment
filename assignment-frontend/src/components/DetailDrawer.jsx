@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { X, User, Building, Mail, MapPin, Truck, Calendar, FileText } from "lucide-react";
+import { X, User, Building, Mail, MapPin, Truck, Calendar, FileText, Loader2 } from "lucide-react";
 import { fetchOrderById } from "../services/mockApi";
 
 export function DetailDrawer({ detailId, onClose }) {
@@ -74,6 +74,7 @@ export function DetailDrawer({ detailId, onClose }) {
         {/* Body */}
         {isLoading ? (
           <div className="drawer-loading" aria-busy="true">
+            <Loader2 size={32} className="spinner-icon text-cyan" />
             <p className="text-cyan">Loading order {detailId} details...</p>
           </div>
         ) : error ? (
