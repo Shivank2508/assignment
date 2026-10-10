@@ -9,7 +9,7 @@ import { VirtualTable } from "./components/VirtualTable";
 import { Pagination } from "./components/Pagination";
 import { DetailDrawer } from "./components/DetailDrawer";
 import { ErrorStateView, EmptyStateView, TableLoader } from "./components/StateViews";
-import { Database, Share2, Check, Loader2 } from "lucide-react";
+import { Database, Loader2 } from "lucide-react";
 
 import "./App.css";
 
@@ -149,17 +149,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="header-right">
-          <button
-            type="button"
-            className="btn-share"
-            onClick={handleShareLink}
-            title="Copy URL with current filters & state"
-          >
-            {copiedLink ? <Check size={14} className="text-emerald" /> : <Share2 size={14} />}
-            <span>{copiedLink ? "Link Copied!" : "Share View"}</span>
-          </button>
-        </div>
+
       </header>
 
       {/* Main Content Area */}
